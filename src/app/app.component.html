@@ -1,0 +1,41 @@
+<div>
+  <label for="hemisphere">Hemisphere:</label>
+  <select id="hemisphere" [(ngModel)]="selectedHemisphere" (change)="filterData()">
+    <option value="">All</option>
+    <option value="NH">NH</option>
+    <option value="SH">SH</option>
+    <option value="TROPICAL">TROPICAL</option>
+  </select>
+
+  <label for="country">Country:</label>
+  <select id="country" [(ngModel)]="selectedCountry" (change)="filterData()">
+    <option value="">All</option>
+    <option *ngFor="let item of data" [value]="item.country">{{item.country}}</option>
+  </select>
+
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"
+    [plotOptions]="chartOptions.plotOptions"
+    [tooltip]="chartOptions.tooltip">
+  </apx-chart>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hemisphere</th>
+      <th>Region</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of filteredData">
+      <td>{{item.hemisphere}}</td>
+      <td>{{item.region}}</td>
+      <td>{{item.country}}</td>
+    </tr>
+  </tbody>
+</table>
