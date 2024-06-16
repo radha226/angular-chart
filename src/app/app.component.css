@@ -1,11 +1,13 @@
-/* Adjust the width of y-axis labels in ApexCharts */
-.apexcharts-yaxis-text {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-.arrow_box span{
-  border: 1px solid red;
-  padding:20px;
+.country{
+  padding-left:20px;
+}
+.title{
+  margin: 30px 0px;
+  text-align: center;
+  color: #d1d11c;
+  font-size: 20px;
+}
+table{
+  width: 70%;
+    text-align: left;
 }

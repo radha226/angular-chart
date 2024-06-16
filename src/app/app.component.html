@@ -1,5 +1,5 @@
 <div>
-  <label for="hemisphere">Hemisphere:</label>
+  <label for="hemisphere">Hemisphere: </label>
   <select id="hemisphere" [(ngModel)]="selectedHemisphere" (change)="filterData()">
     <option value="">All</option>
     <option value="NH">NH</option>
@@ -7,12 +7,13 @@
     <option value="TROPICAL">TROPICAL</option>
   </select>
 
-  <label for="country">Country:</label>
+  <label for="country"  class="country">Country: </label>
   <select id="country" [(ngModel)]="selectedCountry" (change)="filterData()">
     <option value="">All</option>
     <option *ngFor="let item of data" [value]="item.country">{{item.country}}</option>
   </select>
 
+  <div class="title">Graph View</div>
   <apx-chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
@@ -22,7 +23,7 @@
     [tooltip]="chartOptions.tooltip">
   </apx-chart>
 </div>
-
+<div class="title">Table View</div>
 <table>
   <thead>
     <tr>
@@ -36,6 +37,7 @@
       <td>{{item.hemisphere}}</td>
       <td>{{item.region}}</td>
       <td>{{item.country}}</td>
+      
     </tr>
   </tbody>
 </table>
