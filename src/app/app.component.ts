@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     tooltip: {},
     colors: [],
     plotOptions: {},
-    legend: {} // Add legend property
+    legend: {}
   };
 
   public data: DataModel[] = [
@@ -44,7 +44,9 @@ export class AppComponent implements OnInit {
 
   public filteredData: DataModel[] = [...this.data];
   public selectedHemisphere: string = '';
+  public selectedRegion: string = '';
   public selectedCountry: string = '';
+  public sortOrder: 'asc' | 'desc' = 'asc';
 
   ngOnInit() {
     this.updateChartOptions();
@@ -56,14 +58,14 @@ export class AppComponent implements OnInit {
         {
           name: "Date 1 to Date 2",
           data: this.filteredData.map(d => ({
-            x: d.country,
+            x: `${d.country} (${d.region})`,
             y: [d.date1.getTime(), d.date2.getTime()]
           }))
         },
         {
           name: "Date 2 to Date 3",
           data: this.filteredData.map(d => ({
-            x: d.country,
+            x: `${d.country} (${d.region})`,
             y: [d.date2.getTime(), d.date3.getTime()]
           }))
         }
@@ -71,63 +73,29 @@ export class AppComponent implements OnInit {
       chart: {
         type: "rangeBar",
         height: 450
-        
       },
       plotOptions: {
         bar: {
           horizontal: true,
-          barHeight: "80%",
-        },
+          barHeight: "80%"
+        }
       },
       colors: ['#008FFB', '#00E396'],
       xaxis: {
         type: "datetime"
       },
-      yaxis: {
-        // labels: {
-         
-        //   formatter: (val: any, opts: any) => {
-        //     if (opts && typeof opts.dataPointIndex !== 'undefined' && this.filteredData[opts.dataPointIndex]) {
-        //       const country = this.filteredData[opts.dataPointIndex].country;
-        //       const region = this.filteredData[opts.dataPointIndex].region;
-        //       return `${country} (${region})`;
-        //     }
-        //     return '';
-        //   },
-        //   maxWidth: 500
-        // }
-      },
+      yaxis: {},
       tooltip: {
-        
-        custom: (series:any)=> {
-          console.log(series.dataPointIndex)
-          console.log(this.filteredData[series.dataPointIndex].country)
+        custom: (series: any) => {
           const start = new Date(this.filteredData[series.dataPointIndex].date1);
-            const end = new Date(this.filteredData[series.dataPointIndex].date2);
-            const startDate = `${start.getDate()}-${start.toLocaleString('default', { month: 'short' })}-${start.getFullYear()}`;
-            const endDate = `${end.getDate()}-${end.toLocaleString('default', { month: 'short' })}-${end.getFullYear()}`;
-            
-          // return "fjh"
+          const end = new Date(this.filteredData[series.dataPointIndex].date2);
+          const startDate = `${start.getDate()}-${start.toLocaleString('default', { month: 'short' })}-${start.getFullYear()}`;
+          const endDate = `${end.getDate()}-${end.toLocaleString('default', { month: 'short' })}-${end.getFullYear()}`;
           return `<div class="arrow_box" style="padding:5px;">
             <span style="font-weight:bold;color:grey;">${this.filteredData[series.dataPointIndex].country}: </span>
             <span>${startDate} to ${endDate}</span>
-            </div>`
+            </div>`;
         }
-        // x: {
-        //   format: "dd MMM yyyy"
-        // },
-        // y: {
-        //   formatter: (val: number[], opts: any) => {
-        //     console.log("hey"+val[0])
-        //     console.log("oop"+opts)
-
-        //     const start = new Date(val[0]);
-        //     const end = new Date(val[1]);
-        //     const startDate = `${start.getDate()}-${start.toLocaleString('default', { month: 'short' })}-${start.getFullYear()}`;
-        //     const endDate = `${end.getDate()}-${end.toLocaleString('default', { month: 'short' })}-${end.getFullYear()}`;
-        //     return `${startDate} to ${endDate}`;
-        //   }
-        // }
       },
       legend: {
         labels: {
@@ -151,11 +119,38 @@ export class AppComponent implements OnInit {
     };
   }
 
+  getUniqueRegions(): string[] {
+    const regions = this.data.map(d => d.region);
+    return Array.from(new Set(regions));
+  }
+
   filterData() {
     this.filteredData = this.data.filter(d =>
       (this.selectedHemisphere ? d.hemisphere === this.selectedHemisphere : true) &&
+      (this.selectedRegion ? d.region === this.selectedRegion : true) &&
       (this.selectedCountry ? d.country === this.selectedCountry : true)
     );
+    this.sortData();
+    this.updateChartOptions();
+  }
+
+  sortData() {
+    this.filteredData.sort((a, b) => {
+      const comparison = a.country.localeCompare(b.country);
+      return this.sortOrder === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  changeSortOrder(order: 'asc' | 'desc') {
+    this.sortOrder = order;
+    this.filterData();
+  }
+
+  clearFilters() {
+    this.selectedHemisphere = '';
+    this.selectedRegion = '';
+    this.selectedCountry = '';
+    this.filteredData = [...this.data];
     this.updateChartOptions();
   }
 }
