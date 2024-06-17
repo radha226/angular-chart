@@ -39,6 +39,33 @@
 </div>
 
 <div class="title">Table View</div>
+<label for="hemisphere"><strong>Hemisphere: </strong> </label>
+  <select id="hemisphere" [(ngModel)]="selectedHemisphere" (change)="filterData()">
+    <option value="">All</option>
+    <option value="NH">NH</option>
+    <option value="SH">SH</option>
+    <option value="TROPICAL">TROPICAL</option>
+  </select>
+
+  <label for="region" class="filter"><strong>Region:</strong> </label>
+  <select id="region" [(ngModel)]="selectedRegion" (change)="filterData()">
+    <option value="">All</option>
+    <option *ngFor="let region of getUniqueRegions()" [value]="region">{{ region }}</option>
+  </select>
+
+  <label for="country" class="filter"><strong>Country: </strong></label>
+  <select id="country" [(ngModel)]="selectedCountry" (change)="filterData()">
+    <option value="">All</option>
+    <option *ngFor="let item of data" [value]="item.country">{{ item.country }}</option>
+  </select>
+
+  <label for="sortOrder" class="filter"><strong>Sort Order: </strong> </label>
+  <select id="sortOrder" [(ngModel)]="sortOrder" (change)="changeSortOrder(sortOrder)">
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+
+  <!-- <button (click)="clearFilters()" class="filter">Clear Filters</button> -->
 <table>
   <thead>
     <tr>
